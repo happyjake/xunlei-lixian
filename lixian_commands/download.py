@@ -1,5 +1,4 @@
 
-from lixian import XunleiClient
 from lixian_commands.util import *
 from lixian_cli_parser import *
 from lixian_config import *
@@ -23,7 +22,7 @@ def escape_filename(name):
 
 def verify_basic_hash(path, task):
 	if os.path.getsize(path) != task['size']:
-		print 'hash error: incorrect file size'
+		print 'hash error: incorrect file size (%s != %s)' % (os.path.getsize(path), task['size'])
 		return False
 	return lixian_hash.verify_dcid(path, task['dcid'])
 
@@ -118,7 +117,7 @@ def download_single_task(client, download, task, options):
 			os.makedirs(dirname)
 		for t in skipped:
 			with colors(options.get('colors')).yellow():
-				print 'skip task %s/%s (%s) as the status is %s' % (t['id'], t['index'], t['name'].encode(default_encoding), t['status_text'])
+				print 'skip task %s/%s (%s) as the status is %s' % (str(t['id']), t['index'], t['name'].encode(default_encoding), t['status_text'])
 		if mini_hash and resuming and verify_mini_bt_hash(dirname, files):
 			print task['name'].encode(default_encoding), 'is already done'
 			if delete and 'files' not in task:
@@ -226,7 +225,7 @@ def download_task(args):
 	                 'no_bt_dir': not args.bt_dir,
 	                 'save_torrent_file': args.save_torrent_file,
 	                 'colors': args.colors}
-	client = XunleiClient(args.username, args.password, args.cookies)
+	client = create_client(args)
 	assert len(args) or args.input or args.all or args.category, 'Not enough arguments'
 	query = lixian_query.build_query(client, args)
 	query.query_once()
