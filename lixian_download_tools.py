@@ -64,7 +64,7 @@ def aria2_download(client, download_url, path, resuming=False):
 	gdriveid = str(client.get_gdriveid())
 	dir = os.path.dirname(path)
 	filename = os.path.basename(path)
-	aria2_opts = ['aria2c', '--header=Cookie: gdriveid='+gdriveid, download_url, '--out', filename, '--file-allocation=none']
+	aria2_opts = ['aria2c_lx', '--header=Cookie: gdriveid='+gdriveid, download_url, '--out', filename, '--file-allocation=none']
 	if dir:
 		aria2_opts.extend(('--dir', dir))
 	if resuming:
